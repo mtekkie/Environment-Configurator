@@ -6,28 +6,28 @@
 #
 # Optional Operating System Variables:
 #   CONFIG_ZIP: The name of the configuration zip file(-s) (must be somehere in the CONFIG_DIR sub-dir)
-#   APP_CONFIG: Base64 encoded applicaition variables in JSON format. Can be referenced as app.var or var in templates.     
+#   APP_CONFIG: Base64 encoded applicaition variables in JSON format. Can be referenced as app.var or var in templates.
 #   PLATFORM_CONFIG: Base64 encoded platform variables in JSON format. Can only be referenced as platform.var. 
 #
-# Robert Forsström mtekkie.
+# Robert Forsstrï¿½m mtekkie.
 #######################################################
 
 
 - hosts: localhost
   vars:
     app:   	   "{{ lookup('env','APP_CONFIG') | b64decode }}"       	          #Base64Encoded JSON Object.
-    platform:   "{{ lookup('env','PLATFORM_CONFIG') | b64decode }}"    #Base64Encoded JSON Object. 
+    platform:   "{{ lookup('env','PLATFORM_CONFIG') | b64decode }}"    #Base64Encoded JSON Object.
     config_dirs:  "{{ lookup('env', 'CONFIG_DIRS') }}"
     config_zip:   "{{ lookup('env', 'CONFIG_ZIP') }}"
 
     server_xml:         "{{ lookup('env', 'SERVER_XML_OVERRIDE') | b64decode }}" #Base64Encoded server.xml-file
-    server_xml_path:    "{{ lookup('env', 'SERVER_XML_OVERRIDE_PATH') }}"  #Abosulte path to server.xml 
+    server_xml_path:    "{{ lookup('env', 'SERVER_XML_OVERRIDE_PATH') }}"  #Abosulte path to server.xml
     tmp_file:     "/tmp/app.json"
 
   tasks:
 
   - name: (optional) Override server.xml file
-    copy: content="{{ server_xml }}" dest="{{ server_xml_path }}" 
+    copy: content="{{ server_xml }}" dest="{{ server_xml_path }}"
     when: "server_xml|length > 1"
 
   - name: Write variables to tmp file.
@@ -37,15 +37,15 @@
     include_vars: "{{ tmp_file }}"
     when: "app | length >  1"
 
-  - name: Recursive find config zips.  
+  - name: Recursive find config zips.
     find: paths="{{ config_dirs }}" patterns="{{ config_zip }}" recurse=yes
     register: config_zip_files
 
   - name: Unzip config file bundels.
     unarchive: src="{{ item }}" dest="{{ item | dirname }}" remote_src=yes
     with_items: "{{ config_zip_files.files | map(attribute='path') | list }}"
- 
-  - name: Recursive find config-template (.j2) files.  
+
+  - name: Recursive find config-template (.j2) files.
     find: paths="{{ config_dirs }}" patterns="*.j2" recurse=yes
     register: jinja
 
