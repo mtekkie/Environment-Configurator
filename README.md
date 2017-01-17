@@ -11,6 +11,7 @@ An example container start-up procedure would look like this:
   - Container starts and run start-up shell script.
   - Shell script executes ansible-playbook.
   - Playbook searches for .j2 files and does variable substitution. Saves them without the .j2 suffix.
+  - Start the server.
 
 ### Example
 
