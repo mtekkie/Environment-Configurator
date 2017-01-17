@@ -7,7 +7,7 @@
 # Optional Operating System Variables:
 #   CONFIG_ZIP: The name of the configuration zip file(-s) (must be somehere in the CONFIG_DIR sub-dir)
 #   APP_CONFIG: Base64 encoded applicaition variables in JSON format. Can be referenced as app.var or var in templates.
-#   PLATFORM_CONFIG: Base64 encoded platform variables in JSON format. Can only be referenced as platform.var. 
+#   PLATFORM_CONFIG: Base64 encoded platform variables in JSON format. Can only be referenced as platform.var.
 #
 # Robert Forsstr�m mtekkie.
 #######################################################
@@ -35,7 +35,6 @@
 
   - name: Load variables.
     include_vars: "{{ tmp_file }}"
-    when: "app | length >  1"
 
   - name: Recursive find config zips.
     find: paths="{{ config_dirs }}" patterns="{{ config_zip }}" recurse=yes
